@@ -1,0 +1,14 @@
+{% extends '_base.html' %}
+{% block title%}All Posts{% endblock title %}
+{% block content %}
+<h1>All posts</h1>
+<ul>
+    {% for post in blog_list %}
+    <li>
+        <a href="#">{{ post.title }}</a> ({{ post.post_date|date:"M d, Y" }}) &mdash; <a href="#">{{ post.author }}</a>
+    </li>
+    {% endfor %}
+
+</ul>
+
+{% endblock content%}

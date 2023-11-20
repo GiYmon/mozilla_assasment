@@ -52,7 +52,6 @@ class BlogHomePageTest(SimpleTestCase):
     def setUp(self) -> None:
         url = reverse("home")
         self.response = self.client.get(url)
-        self.factory = RequestFactory()
 
     def test_url_exists_at_correct_location(self):
         self.assertEqual(self.response.status_code, 200)
@@ -66,5 +65,37 @@ class BlogHomePageTest(SimpleTestCase):
         self.assertNotContains(self.response, "Hi there! I should not be on the page.")
 
     def test_homepage_url_resolves_homepage(self):
-        view = resolve("/")
+        view = resolve("/blog/")
         self.assertEqual(view.func.__name__, HomePageView.as_view().__name__)
+
+
+class BlogListViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls) -> None:
+        author = User.objects.create_user(username="testuser1", password="testpass1")
+
+        for post_id in range(10):
+            Post.objects.create(
+                title=f"title {post_id}",
+                description=f"desc {post_id}",
+                author=author,
+            )
+
+    def setUp(self) -> None:
+        url = reverse("list")
+        self.response = self.client.get(url)
+
+    def test_view_url_exists_at_correct_location(self):
+        response = self.client.get("/blog/blogs/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessibile_by_name(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, "blog/list.html")
+
+    def test_list_all_blogs(self):
+        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual(len(self.response.context["blog_list"]), 10)
