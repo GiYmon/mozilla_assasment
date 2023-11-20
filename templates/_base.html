@@ -1,0 +1,36 @@
+{% load static %}
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{% block title %}Blog{% endblock title %}</title>
+  </head>
+  <body>
+    <div class="grid-container">
+      <nav >
+        <ul class="nav-bar">
+          <li>
+            <a class="nav-link" href="{% url 'home' %}">Home</a>
+          </li>
+          <li>
+            <a class="nav-link" href="#">All Blogs</a>
+          </li>
+          <li>
+            <a class="nav-link" href="#">All Blogers</a>
+          </li>
+        </ul>
+        {% if user.is_authenticated %}
+          <p>User: {{ user.username }}</p>
+          <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+      </nav>
+      <div class="container">
+        {% block content %}
+        {% endblock content %}
+      </div>
+    </div>
+  </body>
+</html>
