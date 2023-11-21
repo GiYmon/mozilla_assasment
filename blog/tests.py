@@ -96,6 +96,15 @@ class BlogListViewTest(TestCase):
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "blog/list.html")
 
-    def test_list_all_blogs(self):
+    def test_pagination_is_five(self):
         self.assertEqual(self.response.status_code, 200)
-        self.assertEqual(len(self.response.context["blog_list"]), 10)
+        self.assertTrue("is_paginated" in self.response.context)
+        self.assertTrue(self.response.context["is_paginated"] == True)
+        self.assertEqual(len(self.response.context["blog_list"]), 5)
+
+    def test_list_all_blogs(self):
+        response = self.client.get(reverse("list") + "?page=2")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("is_paginated" in self.response.context)
+        self.assertTrue(self.response.context["is_paginated"] == True)
+        self.assertEqual(len(response.context["blog_list"]), 5)
