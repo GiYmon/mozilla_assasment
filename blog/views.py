@@ -1,4 +1,4 @@
-from django.views.generic import ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import Post
 
@@ -13,3 +13,9 @@ class BlogListView(ListView):
     context_object_name = "blog_list"
     paginate_by = 5
     ordering = ["-post_date"]
+
+
+class BlogDetailView(DetailView):
+    model = Post
+    template_name = "blog/detail.html"
+    queryset = Post.objects.all()

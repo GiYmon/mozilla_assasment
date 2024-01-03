@@ -108,3 +108,17 @@ class BlogListViewTest(TestCase):
         self.assertTrue("is_paginated" in self.response.context)
         self.assertTrue(self.response.context["is_paginated"] == True)
         self.assertEqual(len(response.context["blog_list"]), 5)
+
+
+# class BlogDetailViewTest(TestCase):
+#     @classmethod
+#     def setUpTestData(cls) -> None:
+#         author = User.objects.create_user(username="testuser1", password="testpass1")
+
+
+#         for post_id in range(10):
+#             Post.objects.create(
+#                 title=f"title {post_id}",
+#                 description=f"desc {post_id}",
+#                 author=author,
+#             )
