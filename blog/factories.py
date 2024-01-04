@@ -2,7 +2,7 @@ import factory
 from django.conf import settings
 from faker import Faker
 
-from .models import Author
+from .models import Author, Post
 
 fake = Faker()
 
@@ -23,3 +23,12 @@ class AuthorFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     bio = factory.LazyFunction(fake.text)
+
+
+class PostFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Post
+
+    title = factory.Faker("sentence")
+    description = factory.Faker("paragraph")
+    author = factory.SubFactory(AuthorFactory)

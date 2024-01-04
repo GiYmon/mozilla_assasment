@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from ..factories import AuthorFactory
+from ..factories import AuthorFactory, PostFactory
 
 
 @pytest.mark.django_db
@@ -46,9 +46,13 @@ def test_bloggers_list_view(client):
 
 @pytest.mark.django_db
 def test_blogger_detail_view(client):
-    blogger = AuthorFactory()
-    url = reverse("author-detail", kwargs={"pk": blogger.pk})
+    author = AuthorFactory()
+    posts = [PostFactory(author=author) for _ in range(5)]
+    url = reverse("author-detail", kwargs={"pk": author.pk})
     response = client.get(url)
     assert response.status_code == 200
     assert "author/detail.html" in [t.name for t in response.templates]
-    assert response.context["author"] == blogger
+    assert response.context["author"] == author
+    assert list(response.context["posts"]) == posts
+    for post in posts:
+        assert post.title in response.content.decode()

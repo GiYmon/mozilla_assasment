@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import Author, Post
@@ -31,3 +33,8 @@ class AuthorDetailView(DetailView):
     model = Author
     template_name = "author/detail.html"
     queryset = Author.objects.all()
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["posts"] = self.object.posts.all()
+        return context

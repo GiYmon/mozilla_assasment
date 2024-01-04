@@ -1,7 +1,17 @@
 {% extends "_base.html" %}
 {% block title %}{{ author.user.username }}{% endblock title %}
 {% block content %}
-    <h1>{{ author.user.username }}</h1>
+    <h1>Blogger: {{ author.user.username }}</h1>
+    <h2>Bio</h2>
     <p>{{ author.bio }}</p>
+    <h2>Blogs list</h2>
+    <ul>
+        {% for post in posts %}
+        <li>
+            <a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a> ({{ post.post_date|date:"M d, Y" }})
+        </li>
+        {% endfor %}
+    </ul>
+
 
 {% endblock content %}
