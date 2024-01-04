@@ -1,6 +1,6 @@
 from django.views.generic import DetailView, ListView, TemplateView
 
-from .models import Post
+from .models import Author, Post
 
 
 class HomePageView(TemplateView):
@@ -19,3 +19,9 @@ class BlogDetailView(DetailView):
     model = Post
     template_name = "blog/detail.html"
     queryset = Post.objects.all()
+
+
+class AuthorListView(ListView):
+    model = Author
+    template_name = "author/list.html"
+    context_object_name = "authors"

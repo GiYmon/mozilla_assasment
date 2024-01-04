@@ -1,6 +1,8 @@
 import pytest
 from django.urls import reverse
 
+from ..factories import AuthorFactory
+
 
 @pytest.mark.django_db
 def test_home_page_view(client):
@@ -28,3 +30,15 @@ def test_blog_detail_view(client, posts):
     assert response.status_code == 200
     assert "blog/detail.html" in [t.name for t in response.templates]
     assert response.context["post"] == post
+
+
+@pytest.mark.django_db
+def test_bloggers_list_view(client):
+    bloggers = [AuthorFactory() for _ in range(5)]
+    url = reverse("authors-list")
+    response = client.get(url)
+    assert response.status_code == 200
+    assert "author/list.html" in [t.name for t in response.templates]
+    assert len(response.context["authors"]) == 5
+    for blogger in bloggers:
+        assert blogger.user.username in response.content.decode()
