@@ -22,3 +22,6 @@ class Author(models.Model):
 
     def __str__(self) -> str:
         return str(self.user.username)
+
+    def get_absolute_url(self):
+        return reverse("author-detail", kwargs={"pk": self.pk})

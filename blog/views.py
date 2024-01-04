@@ -25,3 +25,9 @@ class AuthorListView(ListView):
     model = Author
     template_name = "author/list.html"
     context_object_name = "authors"
+
+
+class AuthorDetailView(DetailView):
+    model = Author
+    template_name = "author/detail.html"
+    queryset = Author.objects.all()
