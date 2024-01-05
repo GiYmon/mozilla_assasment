@@ -2,7 +2,7 @@ import factory
 from django.conf import settings
 from faker import Faker
 
-from .models import Author, Post
+from .models import Author, Comment, Post
 
 fake = Faker()
 
@@ -32,3 +32,12 @@ class PostFactory(factory.django.DjangoModelFactory):
     title = factory.Faker("sentence")
     description = factory.Faker("paragraph")
     author = factory.SubFactory(AuthorFactory)
+
+
+class CommentFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Comment
+
+    author = factory.SubFactory(UserFactory)
+    post = factory.SubFactory(PostFactory)
+    body = factory.Faker("text", max_nb_chars=255)
