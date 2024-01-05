@@ -7,4 +7,13 @@
     <p>Description:</p>
     <p>{{ post.description }}</p>
 
+    <h2>Comments</h2>
+    {% for comment in post.comments.all %}
+        <p>{{ comment.author.username }} {{ comment.body }}</p>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+    <a href="{% url 'create-comment' post.pk %}">Add comment</a>
+
+
 {% endblock content %}
