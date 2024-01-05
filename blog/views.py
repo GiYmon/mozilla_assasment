@@ -36,5 +36,5 @@ class AuthorDetailView(DetailView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["posts"] = self.object.posts.all()
+        context["posts"] = self.object.posts.order_by("-post_date")
         return context

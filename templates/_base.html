@@ -17,7 +17,7 @@
             <a class="nav-link" href="{% url 'post-list' %}">All Blogs</a>
           </li>
           <li>
-            <a class="nav-link" href="#">All Blogers</a>
+            <a class="nav-link" href="{% url 'author-list' %}">All Blogers</a>
           </li>
         </ul>
         {% if user.is_authenticated %}
