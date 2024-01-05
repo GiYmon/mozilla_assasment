@@ -2,6 +2,9 @@
 {% block title %}{{ post.title }}{% endblock title %}
 {% block content %}
     <h1>{{ post.title }}</h1>
+    <p>Post date {{ post.post_date|date:"M d, Y" }}</p>
+    <p>Author: <a href="{% url 'author-detail' post.author.pk %}">{{ post.author.user.username }}</a></p>
+    <p>Description:</p>
     <p>{{ post.description }}</p>
 
 {% endblock content %}
