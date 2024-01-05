@@ -56,3 +56,45 @@ def test_blogger_detail_view(client):
     assert list(response.context["posts"]) == posts
     for post in posts:
         assert post.title in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_comment_form_logged_out(client):
+    post = PostFactory()
+    url = reverse("create-comment", kwargs={"pk": post.pk})
+
+    response = client.get(url)
+    assert response.status_code == 302
+    assert "/login" in response.url
+
+
+@pytest.mark.django_db
+def test_comment_form_logged_in(client, django_user_model):
+    user = django_user_model.objects.create_user(
+        username="user1", password="testpass123"
+    )
+    post = PostFactory()
+    client.force_login(user)
+    url = reverse("create-comment", kwargs={"pk": post.pk})
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_comment_form_submission(client, django_user_model):
+    user = django_user_model.objects.create_user(
+        username="user1", password="testpass123"
+    )
+    post = PostFactory()
+    client.force_login(user)
+
+    url = reverse("create-comment", kwargs={"pk": post.pk})
+    response = client.post(url, {"body": "New comment"})
+
+    # Check redirection after submission
+    assert response.status_code == 302
+    assert response.url == reverse("post-detail", kwargs={"pk": post.pk})
+
+    # Check comment is created
+    assert post.comments.count() == 1
+    assert post.comments.first().body == "New comment"

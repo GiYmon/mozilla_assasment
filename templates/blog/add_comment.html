@@ -1,0 +1,10 @@
+{% extends "_base.html" %}
+{% block title %}test{% endblock title %}
+{% block content %}
+    <p>Post you comment for: <a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a></p>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock content %}

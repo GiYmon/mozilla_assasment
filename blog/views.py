@@ -1,8 +1,12 @@
 from typing import Any
 
-from django.views.generic import DetailView, ListView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
-from .models import Author, Post
+from .forms import CommentForm
+from .models import Author, Comment, Post
 
 
 class HomePageView(TemplateView):
@@ -37,4 +41,23 @@ class AuthorDetailView(DetailView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["posts"] = self.object.posts.order_by("-post_date")
+        return context
+
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/add_comment.html"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = get_object_or_404(Post, pk=self.kwargs["pk"])
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse_lazy("post-detail", kwargs={"pk": self.kwargs["pk"]})
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["post"] = get_object_or_404(Post, pk=self.kwargs["pk"])
         return context
