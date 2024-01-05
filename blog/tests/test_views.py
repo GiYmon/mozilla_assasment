@@ -47,7 +47,7 @@ def test_bloggers_list_view(client):
 @pytest.mark.django_db
 def test_blogger_detail_view(client):
     author = AuthorFactory()
-    posts = [PostFactory(author=author) for _ in range(5)]
+    posts = [PostFactory(author=author) for _ in range(5)][::-1]
     url = reverse("author-detail", kwargs={"pk": author.pk})
     response = client.get(url)
     assert response.status_code == 200
