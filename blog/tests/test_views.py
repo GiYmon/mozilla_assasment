@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from ..factories import AuthorFactory, PostFactory
+from ..factories import AuthorFactory, CommentFactory, PostFactory
 
 
 @pytest.mark.django_db
@@ -30,6 +30,21 @@ def test_blog_detail_view(client, posts):
     assert response.status_code == 200
     assert "blog/detail.html" in [t.name for t in response.templates]
     assert response.context["post"] == post
+
+
+@pytest.mark.django_db
+def test_blog_detail_view_with_comments(client):
+    post = PostFactory()
+    comments = [CommentFactory(post=post) for _ in range(5)]
+    url = reverse("post-detail", kwargs={"pk": post.pk})
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "blog/detail.html" in [t.name for t in response.templates]
+    assert response.context["post"] == post
+    for comment in comments:
+        assert comment.body in response.content.decode()
 
 
 @pytest.mark.django_db
